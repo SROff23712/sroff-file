@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Upload</title>
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: auto; padding: 2rem; }
+    input, button { margin: 0.5rem 0; display: block; }
+  </style>
+</head>
+<body>
+  <h1>🔒 Upload de fichier</h1>
+  <input type="password" id="pwd" placeholder="Mot de passe" />
+  <div id="upload-section" style="display:none;">
+    <input type="file" id="fileInput" />
+    <button onclick="upload()">Uploader</button>
+    <p id="status"></p>
+  </div>
+
+  <script>
+    const correctPassword = "admin123";
+
+    document.getElementById('pwd').addEventListener('change', function() {
+      if (this.value === correctPassword) {
+        document.getElementById('upload-section').style.display = 'block';
+        this.style.display = 'none';
+      } else {
+        alert("Mot de passe incorrect");
+      }
+    });
+
+    function upload() {
+      const file = document.getElementById('fileInput').files[0];
+      const formData = new FormData();
+      formData.append("file", file);
+
+      fetch("https://upload.uploadcare.com/files/upload", {
+        method: "POST",
+        body: formData,
+        headers: {
+          "Uploadcare-Store": "1",
+          "Authorization": "public_223k2FR2tkJFk7UCGyo8xVEvCzEB"
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById("status").textContent = "✅ Fichier uploadé avec succès !";
+      })
+      .catch(() => {
+        document.getElementById("status").textContent = "❌ Erreur lors de l’upload.";
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Fichiers disponibles</title>
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: auto; padding: 2rem; }
+    a { display: block; margin: 0.5rem 0; }
+  </style>
+</head>
+<body>
+  <h1>📂 Fichiers disponibles</h1>
+  <div id="file-list">Chargement...</div>
+
+  <script>
+    fetch("https://api.upload.io/v2/accounts/uploadcare/uploads", {
+      headers: {
+        Authorization: "public_223k2FR2tkJFk7UCGyo8xVEvCzEB"
+      }
+    })
+    .then(res => res.json())
+    .then(data => {
+      const container = document.getElementById('file-list');
+      container.innerHTML = '';
+      data.files.forEach(file => {
+        const a = document.createElement('a');
+        a.href = file.fileUrl;
+        a.textContent = file.filePath.split("/").pop();
+        a.download = file.filePath.split("/").pop();
+        container.appendChild(a);
+      });
+    })
+    .catch(() => {
+      document.getElementById('file-list').textContent = "Erreur de chargement des fichiers.";
+    });
+  </script>
+</body>
+</html>
